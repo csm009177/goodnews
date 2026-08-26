@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useDeviceType } from "@/components/useDeviceType";
+import { UserMenu } from "@/lib/auth";
 import { useState } from "react";
 
 const navItems = [
@@ -85,6 +86,9 @@ export default function MainLayout({
                 </svg>
               </button>
             )}
+
+            {/* 사용자 메뉴 */}
+            <UserMenu />
           </div>
 
           {/* 모바일 메뉴 드롭다운 */}
