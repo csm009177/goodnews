@@ -103,26 +103,26 @@ src/
 -----------------------------------------------------------------
 
 0. 프로젝트 초기화 및 기반 설정
- [v] Next.js(App Router) 프로젝트 생성 및 기본 설정
- [v] TypeScript, ESLint, PostCSS 설정
- [v] 폴더 구조 (app, features, components, lib) 생성
- [v] 루트 레이아웃 (layout.tsx) : 전역 폰트, Provider 설정
- [v] globals.css : 다크모드 지원, 커서/백라이트 효과 공통 스타일
+ [x] Next.js(App Router) 프로젝트 생성 및 기본 설정
+ [x] TypeScript, ESLint, PostCSS 설정
+ [x] 폴더 구조 (app, features, components, lib) 생성
+ [x] 루트 레이아웃 (layout.tsx) : 전역 폰트, Provider 설정
+ [x] globals.css : 다크모드 지원, 커서/백라이트 효과 공통 스타일
 1. 공통 인프라 (lib/)
- [ ] Pusher SDK : 클라이언트/서버 인스턴스 (pusher)
- [ ] Cloudflare R2 : S3 클라이언트, Presigned URL 생성기 (r2)
- [ ] IndexedDB : 오프라인 캐시 제어 (db)
- [ ] 스마트 로컬 캐싱 전략 : 1단계(허락 질문) → 2단계(IndexedDB 조회) → 3단계(백그라운드 다운로드)
- [ ] 공통 유틸리티 (utils)
+ [x] Pusher SDK : 클라이언트/서버 인스턴스 (pusher)
+ [x] Cloudflare R2 : S3 클라이언트, Presigned URL 생성기 (r2)
+ [x] IndexedDB : 오프라인 캐시 제어 (db)
+ [x] 스마트 로컬 캐싱 전략 : 1단계(허락 질문) → 2단계(IndexedDB 조회) → 3단계(백그라운드 다운로드)
+ [x] 공통 유틸리티 (utils)
 2. 공통 UI 컴포넌트 (components/)
- [ ] Button, Modal, Skeleton 등 기본 UI 부품
- [ ] FloatingMenu (반투명 플로팅 햄버거 메뉴)
- [ ] 기기별 반응형 UI/UX 대응 (데스크톱/태블릿/모바일)
- [ ] 단축키 핸들러 (F11, Esc, M)
+ [x] Button, Modal, Skeleton 등 기본 UI 부품
+ [x] FloatingMenu (반투명 플로팅 햄버거 메뉴)
+ [x] 기기별 반응형 UI/UX 대응 (데스크톱/태블릿/모바일)
+ [x] 단축키 핸들러 (F11, Esc, M)
 3. 일반 모드 레이아웃 (app/(main)/layout.tsx)
- [ ] GNB(글로벌 네비게이션 바)
- [ ] 상단/하단 네비게이션
- [ ] 메인 페이지 (app/(main)/page.tsx)
+ [x] GNB(글로벌 네비게이션 바)
+ [x] 상단/하단 네비게이션
+ [x] 메인 페이지 (app/(main)/page.tsx)
 4. 성경 기능 (bible, bible)
  [ ] 개역한글(KOREAN) / KJV(영문) 데이터 연동
  [ ] 한글 / 영문 / 같이보기 토글
@@ -144,9 +144,9 @@ src/
  [ ] 달력/스트림 토글
  [ ] 일정 생성/수정/삭제 기능
 7. 전체화면 모드 레이아웃 (app/(fullscreen)/layout.tsx)
- [ ] GNB 제거, 100vh 전체화면 래퍼
- [ ] F11 전체화면 제어
- [ ] 반투명 플로팅 햄버거 메뉴
+ [x] GNB 제거, 100vh 전체화면 래퍼
+ [x] F11 전체화면 제어
+ [x] 반투명 플로팅 햄버거 메뉴
 8. 악보 기능 (sheet, sheet)
  [ ] 악보 렌더링
  [ ] 악보 캐시 로더
