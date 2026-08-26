@@ -144,6 +144,33 @@ export const OLD_TESTAMENT_COUNT = 39;
 export const NEW_TESTAMENT_COUNT = 27;
 export const TOTAL_BOOKS = 66;
 
+/**
+ * 성경 책별 장 수 (66권)
+ */
+export const CHAPTER_COUNTS: Record<number, number> = {
+  1: 50, 2: 40, 3: 27, 4: 36, 5: 34, // 모세오경
+  6: 24, 7: 21, 8: 4, 9: 31, 10: 24, // 역사서
+  11: 22, 12: 25, 13: 29, 14: 36, 15: 10,
+  16: 13, 17: 10, 18: 42, 19: 150, 20: 31,
+  21: 12, 22: 8, 23: 66, 24: 52, 25: 5, // 시편/지혜서/대예언서
+  26: 48, 27: 12, 28: 14, 29: 3, 30: 9, // 소예언서
+  31: 1, 32: 4, 33: 7, 34: 1, 35: 3,
+  36: 3, 37: 2, 38: 14, 39: 4, // 말라기
+  40: 28, 41: 16, 42: 24, 43: 21, 44: 28, // 복음서/사도행전
+  45: 16, 46: 16, 47: 13, 48: 6, 49: 6, // 바울서신
+  50: 4, 51: 4, 52: 5, 53: 3, 54: 6,
+  55: 4, 56: 3, 57: 1, 58: 13, 59: 5, // 일반서신
+  60: 5, 61: 3, 62: 5, 63: 1, 64: 1,
+  65: 1, 66: 22, // 유다서/계시록
+};
+
+/**
+ * 책 번호에 해당하는 장 수 반환
+ */
+export function getBookChapterCount(bookNumber: number): number {
+  return CHAPTER_COUNTS[bookNumber] || 1;
+}
+
 export function getBookName(bookNumber: number, lang: "ko" | "en"): string {
   if (lang === "ko") {
     return BIBLE_BOOKS_KOREAN[bookNumber] || `Book ${bookNumber}`;

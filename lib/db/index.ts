@@ -18,6 +18,7 @@ export interface GoodnewsDB extends DBSchema {
   hymn: {
     key: string;
     value: {
+      id: string;
       number: number;
       title: string;
       content: string;

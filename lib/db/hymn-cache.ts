@@ -1,4 +1,4 @@
-import { getDB } from ".";
+import { getDB, type GoodnewsDB } from ".";
 
 const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30일
 
@@ -19,7 +19,7 @@ export async function cacheHymn(
     content,
     category,
     cachedAt: Date.now(),
-  });
+  } as GoodnewsDB["hymn"]["value"]);
   await tx.done;
 }
 

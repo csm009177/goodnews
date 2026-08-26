@@ -60,8 +60,13 @@ export default function EventDetailModal({
               삭제
             </Button>
           )}
+          {onUpdate && (
+            <Button variant="secondary" size="sm" onClick={() => onUpdate(event)}>
+              수정
+            </Button>
+          )}
           <div className="flex-1" />
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose}>
             닫기
           </Button>
         </div>

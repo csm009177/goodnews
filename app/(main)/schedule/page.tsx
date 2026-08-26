@@ -1,13 +1,14 @@
 "use client";
 
 import { useSchedule } from "@/features/schedule/hooks/useSchedule";
-import { getAnnouncements, getScheduleEvents } from "@/features/schedule/services/schedule-data";
+import { getAnnouncements, getScheduleEvents, ScheduleEvent } from "@/features/schedule/services/schedule-data";
 import { RequireRole } from "@/lib/auth";
 import AnnouncementSection from "@/features/schedule/components/AnnouncementSection";
 import CalendarView from "@/features/schedule/components/CalendarView";
 import StreamView from "@/features/schedule/components/StreamView";
 import EventDetailModal from "@/features/schedule/components/EventDetailModal";
-import { Announcement, ScheduleEvent } from "@/features/schedule/services/schedule-data";
+import EventFormModal from "@/features/schedule/components/EventFormModal";
+import { Announcement } from "@/features/schedule/services/schedule-data";
 import { useEffect, useState } from "react";
 
 export default function SchedulePage() {
@@ -23,11 +24,50 @@ export default function SchedulePage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<ScheduleEvent | null>(null);
+  const [formModalOpen, setFormModalOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<ScheduleEvent | null>(null);
 
   useEffect(() => {
     setAnnouncements(getAnnouncements());
     setEvents(getScheduleEvents());
   }, []);
+
+  const handleAddEvent = (eventData: Omit<ScheduleEvent, "id" | "createdAt">) => {
+    const newEvent: ScheduleEvent = {
+      ...eventData,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+    };
+    setEvents((prev) => [...prev, newEvent]);
+  };
+
+  const handleUpdateEvent = (eventData: Omit<ScheduleEvent, "id" | "createdAt">) => {
+    if (!editingEvent) return;
+    setEvents((prev) =>
+      prev.map((e) =>
+        e.id === editingEvent.id
+          ? { ...e, ...eventData }
+          : e
+      )
+    );
+    setEditingEvent(null);
+  };
+
+  const handleDeleteEvent = (id: string) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+    setSelectedEvent(null);
+  };
+
+  const openNewEventForm = () => {
+    setEditingEvent(null);
+    setFormModalOpen(true);
+  };
+
+  const openEditEventForm = (event: ScheduleEvent) => {
+    setEditingEvent(event);
+    setSelectedEvent(null);
+    setFormModalOpen(true);
+  };
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-3.5rem)]">
@@ -64,6 +104,17 @@ export default function SchedulePage() {
               스트림
             </button>
           </div>
+
+          {/* 일정 추가 버튼 */}
+          <button
+            onClick={openNewEventForm}
+            className="backlight-hover ml-auto px-3 py-1.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-1"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            일정 추가
+          </button>
         </div>
       </div>
 
@@ -75,6 +126,7 @@ export default function SchedulePage() {
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
             onEventClick={setSelectedEvent}
+            onAddEventForDate={openNewEventForm}
           />
         ) : (
           <StreamView
@@ -90,6 +142,16 @@ export default function SchedulePage() {
       <EventDetailModal
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
+        onUpdate={openEditEventForm}
+        onDelete={handleDeleteEvent}
+      />
+
+      {/* 일정 생성/수정 폼 모달 */}
+      <EventFormModal
+        isOpen={formModalOpen}
+        onClose={() => setFormModalOpen(false)}
+        onSave={editingEvent ? handleUpdateEvent : handleAddEvent}
+        editEvent={editingEvent}
       />
     </div>
   );
