@@ -164,8 +164,10 @@ src/
  [x] 역할 기반 접근 제어 (RBAC) - utils/roles.ts
  [x] 루트 레이아웃에 AuthProvider 통합
  [x] 메인 레이아웃에 UserMenu 통합
- [ ] 보호 라우트 (Role-based 페이지 접근 제어)
- [ ] 권한 기반 UI 조건부 렌더링 (공지 등록, 합창 필기/녹음 등)
+ [x] 보호 라우트 (ProtectedRoute 컴포넌트)
+ [x] 권한 기반 UI 조건부 렌더링 (RequireRole, RequireAuth, RequireGuest)
+ [x] 합창 페이지: 필기/녹음 기능 CONDUCTOR 이상만 사용
+ [x] 일정 페이지: 공지 등록 버튼 PASTOR 이상만 표시
 11. 배포 및 모바일 빌드
  [ ] Vercel(Hobby) 배포 설정
  [ ] Capacitor 설정 (iOS/Android 빌드)

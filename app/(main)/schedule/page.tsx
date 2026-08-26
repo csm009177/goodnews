@@ -2,6 +2,7 @@
 
 import { useSchedule } from "@/features/schedule/hooks/useSchedule";
 import { getAnnouncements, getScheduleEvents } from "@/features/schedule/services/schedule-data";
+import { RequireRole } from "@/lib/auth";
 import AnnouncementSection from "@/features/schedule/components/AnnouncementSection";
 import CalendarView from "@/features/schedule/components/CalendarView";
 import StreamView from "@/features/schedule/components/StreamView";

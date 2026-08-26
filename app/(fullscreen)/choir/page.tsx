@@ -5,7 +5,7 @@ import { useChoirSocket } from "@/features/choir/hooks/useChoirSocket";
 import { useCanvasDrawing } from "@/features/choir/hooks/useCanvasDrawing";
 import { useRecorder } from "@/features/choir/hooks/useRecorder";
 import { getChoirMembers, getOnlineMembers } from "@/features/choir/services/choir-data";
-import { canDrawOnSheet } from "@/lib/utils/roles";
+import { RequireRole } from "@/lib/auth";
 import AttendancePanel from "@/features/choir/components/AttendancePanel";
 import DrawingToolbar from "@/features/choir/components/DrawingToolbar";
 import RecordingController from "@/features/choir/components/RecordingController";
@@ -76,18 +76,20 @@ export default function ChoirPage() {
           </div>
         </div>
 
-        {/* 필기 캔버스 (오버레이) */}
-        <canvas
-          ref={drawingCanvasRef}
-          className="absolute inset-0 z-10"
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
-        />
+        {/* 필기 캔버스 (오버레이) - CONDUCTOR 이상만 표시 */}
+        <RequireRole role="CONDUCTOR">
+          <canvas
+            ref={drawingCanvasRef}
+            className="absolute inset-0 z-10"
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={stopDrawing}
+          />
+        </RequireRole>
 
         {/* 연결 상태 표시 */}
         <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 bg-black/50 backdrop-blur-md rounded-lg">
@@ -116,19 +118,21 @@ export default function ChoirPage() {
           </svg>
         </button>
 
-        {/* 드로잉 툴바 */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
-          <DrawingToolbar
-            tool={tool}
-            onToolChange={setTool}
-            color={color}
-            onColorChange={setColor}
-            lineWidth={lineWidth}
-            onLineWidthChange={setLineWidth}
-            onClear={clearCanvas}
-            enabled={true}
-          />
-        </div>
+        {/* 드로잉 툴바 - CONDUCTOR 이상만 표시 */}
+        <RequireRole role="CONDUCTOR">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
+            <DrawingToolbar
+              tool={tool}
+              onToolChange={setTool}
+              color={color}
+              onColorChange={setColor}
+              lineWidth={lineWidth}
+              onLineWidthChange={setLineWidth}
+              onClear={clearCanvas}
+              enabled={true}
+            />
+          </div>
+        </RequireRole>
       </div>
 
       {/* 사이드 패널 */}
@@ -137,16 +141,18 @@ export default function ChoirPage() {
           {/* 출석 현황 */}
           <AttendancePanel members={onlineMembers} />
 
-          {/* 녹음 컨트롤러 */}
-          <RecordingController
-            isRecording={isRecording}
-            duration={duration}
-            audioUrl={audioUrl}
-            onStart={startRecording}
-            onStop={stopRecording}
-            onReset={resetRecording}
-            onDownload={downloadRecording}
-          />
+          {/* 녹음 컨트롤러 - CONDUCTOR 이상만 표시 */}
+          <RequireRole role="CONDUCTOR">
+            <RecordingController
+              isRecording={isRecording}
+              duration={duration}
+              audioUrl={audioUrl}
+              onStart={startRecording}
+              onStop={stopRecording}
+              onReset={resetRecording}
+              onDownload={downloadRecording}
+            />
+          </RequireRole>
         </div>
       )}
     </div>

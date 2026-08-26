@@ -1,17 +1,20 @@
 "use client";
 
 import { Announcement } from "../services/schedule-data";
+import { RequireRole } from "@/lib/auth";
 
 interface AnnouncementSectionProps {
   announcements: Announcement[];
   collapsed: boolean;
   onToggleCollapse: () => void;
+  onAddAnnouncement?: () => void;
 }
 
 export default function AnnouncementSection({
   announcements,
   collapsed,
   onToggleCollapse,
+  onAddAnnouncement,
 }: AnnouncementSectionProps) {
   const pinnedAnnouncements = announcements.filter((a) => a.pinned);
   const normalAnnouncements = announcements.filter((a) => !a.pinned);
@@ -36,7 +39,18 @@ export default function AnnouncementSection({
               </span>
             )}
           </div>
-          <svg
+          <div className="flex items-center gap-2">
+            {/* 공지 등록 버튼 - PASTOR 이상만 표시 */}
+            <RequireRole role="PASTOR">
+              <button
+                onClick={onAddAnnouncement}
+                className="backlight-hover px-2 py-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-md text-xs font-medium transition-colors"
+                title="공지 등록"
+              >
+                + 등록
+              </button>
+            </RequireRole>
+            <svg
             className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform ${
               collapsed ? "" : "rotate-180"
             }`}
