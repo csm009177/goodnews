@@ -1,15 +1,53 @@
+"use client";
+
+import { useBible } from "@/features/bible/hooks/useBible";
+import BibleViewer from "@/features/bible/components/BibleViewer";
+import BibleViewModeToggle from "@/features/bible/components/BibleViewModeToggle";
+import BibleNavigator from "@/features/bible/components/BibleNavigator";
+import { BIBLE_BOOKS_KOREAN } from "@/lib/utils/bible-books";
+
 export default function BiblePage() {
+  const {
+    koreanChapter,
+    kjvChapter,
+    loading,
+    error,
+    viewMode,
+    setViewMode,
+    currentBook,
+    currentChapter,
+    goToNextChapter,
+    goToPrevChapter,
+  } = useBible(1, 1);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
-      <div className="text-center">
-        <div className="text-6xl mb-4">📖</div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          성경
-        </h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          성경 뷰어를 준비 중입니다...
-        </p>
+    <div className="flex flex-col min-h-[calc(100vh-3.5rem)]">
+      {/* 상단 컨트롤 바 */}
+      <div className="sticky top-14 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
+          <BibleNavigator
+            currentBook={currentBook}
+            currentChapter={currentChapter}
+            onNavigate={(book, chapter) => {
+              // TODO: 네비게이션 처리
+            }}
+          />
+          <BibleViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+        </div>
       </div>
+
+      {/* 성경 본문 */}
+      <BibleViewer
+        koreanChapter={koreanChapter}
+        kjvChapter={kjvChapter}
+        viewMode={viewMode}
+        loading={loading}
+        error={error}
+        onNext={goToNextChapter}
+        onPrev={goToPrevChapter}
+        bookName={BIBLE_BOOKS_KOREAN[currentBook]}
+        chapter={currentChapter}
+      />
     </div>
   );
 }
