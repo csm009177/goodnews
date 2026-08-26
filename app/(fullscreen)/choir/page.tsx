@@ -12,7 +12,7 @@ import RecordingController from "@/features/choir/components/RecordingController
 
 export default function ChoirPage() {
   const { connected, onlineMembers, connect, disconnect } = useChoirSocket();
-  const { isRecording, duration, audioUrl, startRecording, stopRecording, resetRecording, downloadRecording } = useRecorder();
+  const { isRecording, duration, audioUrl, uploading, uploadedUrl, uploadProgress, startRecording, stopRecording, resetRecording, downloadRecording, uploadToR2 } = useRecorder();
   const [showSidePanel, setShowSidePanel] = useState(true);
 
   // Canvas 설정
@@ -147,10 +147,14 @@ export default function ChoirPage() {
               isRecording={isRecording}
               duration={duration}
               audioUrl={audioUrl}
+              uploading={uploading}
+              uploadedUrl={uploadedUrl}
+              uploadProgress={uploadProgress}
               onStart={startRecording}
               onStop={stopRecording}
               onReset={resetRecording}
               onDownload={downloadRecording}
+              onUpload={uploadToR2}
             />
           </RequireRole>
         </div>
