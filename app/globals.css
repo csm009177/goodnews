@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --backlight-color: rgba(59, 130, 246, 0.12);
+  --backlight-glow: 0 0 8px 2px rgba(59, 130, 246, 0.18);
 }
 
 @theme inline {
@@ -16,6 +18,8 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --backlight-color: rgba(96, 165, 250, 0.15);
+    --backlight-glow: 0 0 8px 2px rgba(96, 165, 250, 0.22);
   }
 }
 
@@ -23,4 +27,64 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  cursor: default;
+}
+
+/* ── 공통 UI/UX : 백라이트 (Backlight / Highlight) 효과 ── */
+.backlight-hover {
+  cursor: default;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.backlight-hover:hover {
+  background-color: var(--backlight-color);
+  box-shadow: var(--backlight-glow);
+}
+
+.backlight-active:active {
+  background-color: var(--backlight-color);
+  box-shadow: var(--backlight-glow);
+}
+
+/* ── 커서 기본 유지 (pointer 커서 금지) ── */
+a,
+button,
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+select,
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: default;
+}
+
+/* ── 스크롤바 커스텀 (다크모드 대응) ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.35);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.55);
+}
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(160, 160, 160, 0.3);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(160, 160, 160, 0.5);
+  }
 }
