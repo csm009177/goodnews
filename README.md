@@ -169,6 +169,40 @@ src/
  [x] 합창 페이지: 필기/녹음 기능 CONDUCTOR 이상만 사용
  [x] 일정 페이지: 공지 등록 버튼 PASTOR 이상만 표시
 11. 배포 및 모바일 빌드
- [ ] Vercel(Hobby) 배포 설정
+ [x] Vercel(Hobby) 배포 설정 (vercel.json, next.config.ts 헤더/이미지 최적화)
+ [x] 환경 변수 문서화 (.env.example)
  [ ] Capacitor 설정 (iOS/Android 빌드)
  [ ] 오프라인 동작 테스트
+
+-----------------------------------------------------------------
+
+## 배포 가이드
+
+### Vercel 배포
+
+1. GitHub 저장소를 Vercel에 연결
+2. 프로젝트 설정에서 다음 환경 변수를 추가:
+   - `R2_ACCESS_KEY_ID` - Cloudflare R2 액세스 키
+   - `R2_SECRET_ACCESS_KEY` - Cloudflare R2 시크릿 키
+   - `R2_ACCOUNT_ID` - Cloudflare 계정 ID
+   - `R2_BUCKET_NAME` - R2 버킷 이름 (기본값: goodnews)
+   - `PUSHER_APP_ID` - Pusher 앱 ID
+   - `PUSHER_KEY` - Pusher 키
+   - `PUSHER_SECRET` - Pusher 시크릿
+   - `PUSHER_CLUSTER` - Pusher 클러스터
+3. `git push` 시 자동으로 배포됨
+
+### 로컬 빌드 테스트
+
+```bash
+npm run build
+npm start
+```
+
+### 환경 변수
+
+`.env.example` 파일을 참고하여 `.env.local` 파일을 생성하세요.
+
+```bash
+cp .env.example .env.local
+```
