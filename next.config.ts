@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
+  // Capacitor 호환성 설정
+  // Next.js App Router + Capacitor를 위해 output 설정
+  // (Capacitor는 정적 파일을 필요로 함)
+  // output: "export", // 정적 내보내기 모드 (필요시 활성화)
+
   // API route 타임아웃 (R2 presigned URL 생성용)
   experimental: {
     // API route body size limit

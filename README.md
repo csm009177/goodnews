@@ -171,7 +171,8 @@ src/
 11. 배포 및 모바일 빌드
  [x] Vercel(Hobby) 배포 설정 (vercel.json, next.config.ts 헤더/이미지 최적화)
  [x] 환경 변수 문서화 (.env.example)
- [ ] Capacitor 설정 (iOS/Android 빌드)
+ [x] Capacitor 설정 (모바일 빌드 환경, package.json 스크립트)
+ [x] Capacitor 모바일 빌드 가이드 (docs/capacitor-setup.md)
  [ ] 오프라인 동작 테스트
 
 -----------------------------------------------------------------
@@ -206,3 +207,23 @@ npm start
 ```bash
 cp .env.example .env.local
 ```
+
+### Capacitor 모바일 빌드
+
+```bash
+# Android 플랫폼 추가
+npm run cap:add:android
+
+# iOS 플랫폼 추가 (macOS에서만 가능)
+npm run cap:add:ios
+
+# 빌드 및 동기화
+npm run build
+npm run cap:sync
+
+# IDE에서 열기
+npm run cap:open:android  # Android Studio
+npm run cap:open:ios      # Xcode (macOS)
+```
+
+자세한 가이드는 `docs/capacitor-setup.md`를 참고하세요.
