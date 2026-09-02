@@ -195,35 +195,33 @@ src/
 
 ### 로컬 빌드 테스트
 
-```bash
 npm run build
 npm start
-```
 
 ### 환경 변수
 
 `.env.example` 파일을 참고하여 `.env.local` 파일을 생성하세요.
 
-```bash
 cp .env.example .env.local
-```
 
 ### Capacitor 모바일 빌드
 
-```bash
-# Android 플랫폼 추가
+#### Android 플랫폼 추가
+
 npm run cap:add:android
 
-# iOS 플랫폼 추가 (macOS에서만 가능)
+#### iOS 플랫폼 추가 (macOS에서만 가능)
+
 npm run cap:add:ios
 
-# 빌드 및 동기화
+#### 빌드 및 동기화
+
 npm run build
 npm run cap:sync
 
-# IDE에서 열기
+#### IDE에서 열기
+
 npm run cap:open:android  # Android Studio
 npm run cap:open:ios      # Xcode (macOS)
-```
 
 자세한 가이드는 `docs/capacitor-setup.md`를 참고하세요.
