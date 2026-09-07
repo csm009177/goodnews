@@ -183,15 +183,27 @@ src/
 
 1. GitHub 저장소를 Vercel에 연결
 2. 프로젝트 설정에서 다음 환경 변수를 추가:
+
+   **Cloudflare R2 (서버 전용)**
    - `R2_ACCESS_KEY_ID` - Cloudflare R2 액세스 키
    - `R2_SECRET_ACCESS_KEY` - Cloudflare R2 시크릿 키
    - `R2_ACCOUNT_ID` - Cloudflare 계정 ID
    - `R2_BUCKET_NAME` - R2 버킷 이름 (기본값: goodnews)
+
+   **Pusher (서버 전용)**
    - `PUSHER_APP_ID` - Pusher 앱 ID
    - `PUSHER_KEY` - Pusher 키
    - `PUSHER_SECRET` - Pusher 시크릿
-   - `PUSHER_CLUSTER` - Pusher 클러스터
+   - `PUSHER_CLUSTER` - Pusher 클러스터 (기본값: ap3)
+
+   **Pusher (클라이언트 전용 - `NEXT_PUBLIC_` 접두사 필수)**
+   - `NEXT_PUBLIC_PUSHER_KEY` - Pusher 키 (서버용 PUSHER_KEY와 동일)
+   - `NEXT_PUBLIC_PUSHER_CLUSTER` - Pusher 클러스터 (기본값: ap3)
+
 3. `git push` 시 자동으로 배포됨
+
+> **참고**: `NEXT_PUBLIC_` 접두사가 없는 환경변수는 서버 사이드에서만 접근 가능합니다.
+> 클라이언트에서 사용하는 변수는 반드시 `NEXT_PUBLIC_` 접두사를 붙여야 합니다.
 
 ### 로컬 빌드 테스트
 
