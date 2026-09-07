@@ -6,7 +6,7 @@ import { BIBLE_BOOKS_KOREAN, BIBLE_BOOKS_ENGLISH, TOTAL_BOOKS, getBookChapterCou
 interface BibleNavigatorProps {
   currentBook: number;
   currentChapter: number;
-  onNavigate: (book: number, chapter: number) => void;
+  onNavigate: (book: number, chapter: number, verse?: number) => void;
 }
 
 export default function BibleNavigator({
@@ -32,7 +32,7 @@ export default function BibleNavigator({
   };
 
   const handleSearchNavigate = () => {
-    onNavigate(searchBook, searchChapter);
+    onNavigate(searchBook, searchChapter, searchVerse);
     setSearchMode(false);
     setIsOpen(false);
   };

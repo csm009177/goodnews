@@ -8,6 +8,7 @@ interface AnnouncementSectionProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
   onAddAnnouncement?: () => void;
+  onEditAnnouncement?: (announcement: Announcement) => void;
 }
 
 export default function AnnouncementSection({
@@ -15,6 +16,7 @@ export default function AnnouncementSection({
   collapsed,
   onToggleCollapse,
   onAddAnnouncement,
+  onEditAnnouncement,
 }: AnnouncementSectionProps) {
   const pinnedAnnouncements = announcements.filter((a) => a.pinned);
   const normalAnnouncements = announcements.filter((a) => !a.pinned);
@@ -43,7 +45,10 @@ export default function AnnouncementSection({
             {/* 공지 등록 버튼 - PASTOR 이상만 표시 */}
             <RequireRole role="PASTOR">
               <button
-                onClick={onAddAnnouncement}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddAnnouncement?.();
+                }}
                 className="backlight-hover px-2 py-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-md text-xs font-medium transition-colors"
                 title="공지 등록"
               >
@@ -51,20 +56,21 @@ export default function AnnouncementSection({
               </button>
             </RequireRole>
             <svg
-            className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform ${
-              collapsed ? "" : "rotate-180"
-            }`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+              className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform ${
+                collapsed ? "" : "rotate-180"
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
         </button>
 
         {/* 공지 목록 */}
@@ -76,6 +82,7 @@ export default function AnnouncementSection({
                 key={announcement.id}
                 announcement={announcement}
                 pinned
+                onEditAnnouncement={onEditAnnouncement}
               />
             ))}
 
@@ -85,6 +92,7 @@ export default function AnnouncementSection({
                 key={announcement.id}
                 announcement={announcement}
                 pinned={false}
+                onEditAnnouncement={onEditAnnouncement}
               />
             ))}
           </div>
@@ -97,13 +105,15 @@ export default function AnnouncementSection({
 function AnnouncementItem({
   announcement,
   pinned,
+  onEditAnnouncement,
 }: {
   announcement: Announcement;
   pinned: boolean;
+  onEditAnnouncement?: (announcement: Announcement) => void;
 }) {
   return (
     <div
-      className={`backlight-hover p-3 rounded-lg ${
+      className={`backlight-hover group p-3 rounded-lg ${
         pinned
           ? "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
           : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
@@ -133,6 +143,31 @@ function AnnouncementItem({
             </span>
           </div>
         </div>
+        {/* 수정 버튼 - PASTOR 이상에게만 표시 */}
+        <RequireRole role="PASTOR">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditAnnouncement?.(announcement);
+            }}
+            className="invisible group-hover:visible p-1 rounded-md text-gray-400 hover:text-gray-500 transition-colors"
+            title="공지 수정"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 4l4 4m0 0l-8 8-4-4 8-8zm0 0L12 8"
+              />
+            </svg>
+          </button>
+        </RequireRole>
       </div>
     </div>
   );

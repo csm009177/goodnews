@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { getPusherClient, disconnectPusher } from "@/lib/pusher/client";
 import { ChoirMember } from "../services/choir-data";
+import { Channel } from "pusher-js";
 
 const CHOIR_CHANNEL = "choir-room";
 const MIRroring_EVENT = "mirror-update";
@@ -19,7 +20,7 @@ export function useChoirSocket() {
   const [connected, setConnected] = useState(false);
   const [onlineMembers, setOnlineMembers] = useState<ChoirMember[]>([]);
   const [mirrorState, setMirrorState] = useState<MirrorState | null>(null);
-  const channelRef = useRef<ReturnType<typeof getPusherClient>["subscribe"] | null>(null);
+  const channelRef = useRef<Channel | null>(null);
 
   const connect = useCallback(() => {
     try {

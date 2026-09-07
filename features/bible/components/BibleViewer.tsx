@@ -2,6 +2,7 @@
 
 import { BibleChapter } from "../services/bible-api";
 import { BibleViewMode } from "../hooks/useBible";
+import { useRef, useEffect } from "react";
 
 interface BibleViewerProps {
   koreanChapter: BibleChapter | null;
@@ -13,6 +14,7 @@ interface BibleViewerProps {
   onPrev: () => void;
   bookName: string;
   chapter: number;
+  scrollToVerseRef?: { current: (verseNum: number) => void };
 }
 
 export default function BibleViewer({
@@ -25,10 +27,30 @@ export default function BibleViewer({
   onPrev,
   bookName,
   chapter,
+  scrollToVerseRef,
 }: BibleViewerProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // scrollToVerse ref 연결
+  useEffect(() => {
+    if (scrollToVerseRef) {
+      scrollToVerseRef.current = (verseNum: number) => {
+        const verseEl = document.getElementById(`verse-${verseNum}`);
+        if (verseEl) {
+          verseEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          // 하이라이트 효과
+          verseEl.classList.add("bg-yellow-200", "dark:bg-yellow-700");
+          setTimeout(() => {
+            verseEl.classList.remove("bg-yellow-200", "dark:bg-yellow-700");
+          }, 2000);
+        }
+      };
+    }
+  }, [scrollToVerseRef]);
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400" />
       </div>
     );
@@ -36,7 +58,7 @@ export default function BibleViewer({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-red-500">
+      <div className="flex flex-col items-center justify-center min-h-100 text-red-500">
         <p className="text-lg font-medium mb-2">로딩 실패</p>
         <p className="text-sm text-gray-500 dark:text-gray-400">{error}</p>
       </div>
@@ -44,7 +66,7 @@ export default function BibleViewer({
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div ref={containerRef} className="max-w-4xl mx-auto px-4 py-8">
       {/* 장 제목 */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -55,11 +77,11 @@ export default function BibleViewer({
       {/* 성경 본문 */}
       <div className="space-y-6">
         {viewMode === "KOREAN" && koreanChapter && (
-          <BibleText chapter={koreanChapter} lang="ko" />
+          <BibleText chapter={koreanChapter} />
         )}
 
         {viewMode === "KJV" && kjvChapter && (
-          <BibleText chapter={kjvChapter} lang="en" />
+          <BibleText chapter={kjvChapter} />
         )}
 
         {viewMode === "BOTH" && koreanChapter && kjvChapter && (
@@ -68,13 +90,13 @@ export default function BibleViewer({
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                 개역한글
               </h3>
-              <BibleText chapter={koreanChapter} lang="ko" />
+              <BibleText chapter={koreanChapter} />
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
                 KJV
               </h3>
-              <BibleText chapter={kjvChapter} lang="en" />
+              <BibleText chapter={kjvChapter} />
             </div>
           </div>
         )}
@@ -101,17 +123,16 @@ export default function BibleViewer({
 
 function BibleText({
   chapter,
-  lang,
 }: {
   chapter: BibleChapter;
-  lang: "ko" | "en";
 }) {
   return (
     <div className="prose dark:prose-invert max-w-none">
       {chapter.verses.map((verse) => (
         <span
           key={verse.verse}
-          className="inline"
+          id={`verse-${verse.verse}`}
+          className="inline transition-colors duration-300"
         >
           <sup className="text-xs text-blue-600 dark:text-blue-400 font-medium mr-0.5">
             {verse.verse}

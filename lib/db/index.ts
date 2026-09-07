@@ -7,6 +7,7 @@ export interface GoodnewsDB extends DBSchema {
   bible: {
     key: string;
     value: {
+      id: string;
       book: string;
       chapter: number;
       content: string;

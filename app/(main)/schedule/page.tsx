@@ -4,12 +4,13 @@ import { useSchedule } from "@/features/schedule/hooks/useSchedule";
 import { getAnnouncements, getScheduleEvents, ScheduleEvent } from "@/features/schedule/services/schedule-data";
 import { RequireRole } from "@/lib/auth";
 import AnnouncementSection from "@/features/schedule/components/AnnouncementSection";
+import AnnouncementFormModal from "@/features/schedule/components/AnnouncementFormModal";
 import CalendarView from "@/features/schedule/components/CalendarView";
 import StreamView from "@/features/schedule/components/StreamView";
 import EventDetailModal from "@/features/schedule/components/EventDetailModal";
 import EventFormModal from "@/features/schedule/components/EventFormModal";
 import { Announcement } from "@/features/schedule/services/schedule-data";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export default function SchedulePage() {
   const {
@@ -26,11 +27,48 @@ export default function SchedulePage() {
   const [selectedEvent, setSelectedEvent] = useState<ScheduleEvent | null>(null);
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<ScheduleEvent | null>(null);
+  const [announcementModalOpen, setAnnouncementModalOpen] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
 
   useEffect(() => {
     setAnnouncements(getAnnouncements());
     setEvents(getScheduleEvents());
   }, []);
+
+  // 공지 등록/수정 처리
+  const handleAddAnnouncement = (
+    data: Omit<Announcement, "id" | "createdAt" | "updatedAt">
+  ) => {
+    if (editingAnnouncement) {
+      // 수정
+      setAnnouncements((prev) =>
+        prev.map((a) =>
+          a.id === editingAnnouncement.id
+            ? { ...a, ...data, updatedAt: new Date().toISOString() }
+            : a
+        )
+      );
+    } else {
+      // 신규 등록
+      const newAnnouncement: Announcement = {
+        ...data,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      setAnnouncements((prev) => [newAnnouncement, ...prev]);
+    }
+    setEditingAnnouncement(null);
+  };
+
+  // 공지 정렬: 고정 먼저, 그 다음 최신순
+  const sortedAnnouncements = useMemo(() => {
+    return [...announcements].sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [announcements]);
 
   const handleAddEvent = (eventData: Omit<ScheduleEvent, "id" | "createdAt">) => {
     const newEvent: ScheduleEvent = {
@@ -69,13 +107,25 @@ export default function SchedulePage() {
     setFormModalOpen(true);
   };
 
+  const openNewAnnouncementForm = () => {
+    setEditingAnnouncement(null);
+    setAnnouncementModalOpen(true);
+  };
+
+  const openEditAnnouncementForm = (announcement: Announcement) => {
+    setEditingAnnouncement(announcement);
+    setAnnouncementModalOpen(true);
+  };
+
   return (
     <div className="flex flex-col min-h-[calc(100vh-3.5rem)]">
       {/* 공지사항 섹션 */}
       <AnnouncementSection
-        announcements={announcements}
+        announcements={sortedAnnouncements}
         collapsed={collapsedAnnouncements}
         onToggleCollapse={toggleAnnouncementCollapse}
+        onAddAnnouncement={openNewAnnouncementForm}
+        onEditAnnouncement={openEditAnnouncementForm}
       />
 
       {/* 상단 컨트롤 바 */}
@@ -126,7 +176,6 @@ export default function SchedulePage() {
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
             onEventClick={setSelectedEvent}
-            onAddEventForDate={openNewEventForm}
           />
         ) : (
           <StreamView
@@ -153,6 +202,19 @@ export default function SchedulePage() {
         onSave={editingEvent ? handleUpdateEvent : handleAddEvent}
         editEvent={editingEvent}
       />
+
+      {/* 공지 등록/수정 모달 */}
+      <RequireRole role="PASTOR">
+        <AnnouncementFormModal
+          isOpen={announcementModalOpen}
+          onClose={() => {
+            setAnnouncementModalOpen(false);
+            setEditingAnnouncement(null);
+          }}
+          onSubmit={handleAddAnnouncement}
+          initialData={editingAnnouncement}
+        />
+      </RequireRole>
     </div>
   );
 }

@@ -1,18 +1,16 @@
 "use client";
 
-import { useRef } from "react";
-
 interface SheetViewerProps {
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
   currentPage: number;
   totalPages: number;
   loading: boolean;
   error: string | null;
   renderScale: number;
-  onNext: () => void;
-  onPrev: () => void;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
+  goToNextPage: () => void;
+  goToPrevPage: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
 }
 
 export default function SheetViewer({
@@ -22,10 +20,10 @@ export default function SheetViewer({
   loading,
   error,
   renderScale,
-  onNext,
-  onPrev,
-  onZoomIn,
-  onZoomOut,
+  goToNextPage,
+  goToPrevPage,
+  zoomIn,
+  zoomOut,
 }: SheetViewerProps) {
   if (loading) {
     return (
@@ -60,7 +58,7 @@ export default function SheetViewer({
       {/* 컨트롤 바 */}
       <div className="flex items-center gap-2 px-4 py-2 bg-black/50 backdrop-blur-md">
         <button
-          onClick={onZoomOut}
+          onClick={zoomOut}
           className="backlight-hover w-8 h-8 flex items-center justify-center rounded-lg text-white/80 hover:text-white"
           title="축소"
         >
@@ -72,7 +70,7 @@ export default function SheetViewer({
           {Math.round(renderScale * 100)}%
         </span>
         <button
-          onClick={onZoomIn}
+          onClick={zoomIn}
           className="backlight-hover w-8 h-8 flex items-center justify-center rounded-lg text-white/80 hover:text-white"
           title="확대"
         >
@@ -84,7 +82,7 @@ export default function SheetViewer({
         <div className="w-px h-5 bg-white/20 mx-2" />
 
         <button
-          onClick={onPrev}
+          onClick={goToPrevPage}
           disabled={currentPage <= 1}
           className="backlight-hover w-8 h-8 flex items-center justify-center rounded-lg text-white/80 hover:text-white disabled:opacity-30 disabled:cursor-default"
           title="이전 페이지"
@@ -97,7 +95,7 @@ export default function SheetViewer({
           {currentPage} / {totalPages}
         </span>
         <button
-          onClick={onNext}
+          onClick={goToNextPage}
           disabled={currentPage >= totalPages}
           className="backlight-hover w-8 h-8 flex items-center justify-center rounded-lg text-white/80 hover:text-white disabled:opacity-30 disabled:cursor-default"
           title="다음 페이지"

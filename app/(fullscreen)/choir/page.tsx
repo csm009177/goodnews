@@ -16,7 +16,7 @@ export default function ChoirPage() {
   const [showSidePanel, setShowSidePanel] = useState(true);
 
   // Canvas 설정
-  const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
+  const drawingCanvasRef = useRef<HTMLCanvasElement>(null!);
   const {
     tool,
     setTool,

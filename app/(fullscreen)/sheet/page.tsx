@@ -1,10 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useState, useEffect, Suspense } from "react";
 import { SheetMusic, getAllSheets } from "@/features/sheet/services/sheet-data";
-import { useSheetViewer } from "@/features/sheet/hooks/useSheetViewer";
-import SheetList from "@/features/sheet/components/SheetList";
-import SheetViewer from "@/features/sheet/components/SheetViewer";
+
+// pdf.js가 SSR 환경에서 DOMMatrix를 사용할 수 없으므로 동적 import
+const SheetViewerWrapper = dynamic(
+  () => import("./SheetViewerWrapper"),
+  { ssr: false }
+);
+
+const SheetList = dynamic(
+  () => import("@/features/sheet/components/SheetList"),
+  { ssr: false }
+);
 
 export default function SheetPage() {
   const [sheets, setSheets] = useState<SheetMusic[]>([]);
@@ -13,8 +22,6 @@ export default function SheetPage() {
   useEffect(() => {
     setSheets(getAllSheets());
   }, []);
-
-  const viewer = useSheetViewer(selectedSheet);
 
   if (selectedSheet) {
     return (
@@ -33,7 +40,11 @@ export default function SheetPage() {
         </div>
 
         {/* 악보 뷰어 */}
-        <SheetViewer {...viewer} />
+        <Suspense fallback={<div className="flex items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400" />
+        </div>}>
+          <SheetViewerWrapper sheet={selectedSheet} />
+        </Suspense>
       </div>
     );
   }
