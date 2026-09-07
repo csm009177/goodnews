@@ -12,15 +12,20 @@ export interface BibleChapter {
   verses: BibleVerse[];
 }
 
-const API_BASE = "https://bible-api.com";
+// 한국어 성경 API (개역개정)
+const KOREAN_API_BASE = "https://bible-api.com";
+// 영어 성경 API (KJV)
+const ENGLISH_API_BASE = "https://bible-api.com";
 
 export async function fetchBibleChapter(
   book: string,
   chapter: number,
   translation: "kyo" | "kjv" = "kyo"
 ): Promise<BibleChapter> {
+  const apiBase = translation === "kyo" ? KOREAN_API_BASE : ENGLISH_API_BASE;
+
   const response = await fetch(
-    `${API_BASE}/${chapter}?translation=${translation}&include_verse_numbers=true`
+    `${apiBase}/${book}+${chapter}?translation=${translation}&include_verse_numbers=true`
   );
 
   if (!response.ok) {
@@ -48,8 +53,9 @@ export async function fetchBibleVerse(
   verse: number,
   translation: "kyo" | "kjv" = "kyo"
 ): Promise<BibleVerse> {
+  const apiBase = translation === "kyo" ? KOREAN_API_BASE : ENGLISH_API_BASE;
   const response = await fetch(
-    `${API_BASE}/${book}+${chapter}:${verse}?translation=${translation}&include_verse_numbers=true`
+    `${apiBase}/${book}+${chapter}:${verse}?translation=${translation}&include_verse_numbers=true`
   );
 
   if (!response.ok) {

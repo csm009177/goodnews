@@ -122,3 +122,14 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- 성경 테이블 추가
+create table bible_verses (
+  id uuid default uuid_generate_v4() primary key,
+  book text not null,
+  chapter integer not null,
+  verse integer not null,
+  text text not null,
+  version text check (version in ('KOREAN', 'KJV')) not null,
+  unique(book, chapter, verse, version)
+);
